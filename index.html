@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Private Space 💖</title>
+    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+    <style>
+        /* General Styles */
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --background: #f8f9fa;
+            --text: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text);
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        /* Login Section */
+        .input-group {
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: var(--secondary);
+        }
+
+        .toggle-btn {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #777;
+        }
+
+        .toggle-btn:hover {
+            color: var(--secondary);
+        }
+
+        .login-btn {
+            background: var(--secondary);
+            color: white;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background: #2980b9;
+        }
+
+        #error-message {
+            color: var(--accent);
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Main Section */
+        #main-section {
+            display: none;
+        }
+
+        .features {
+            display: grid;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .feature-btn {
+            background: var(--secondary);
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .feature-btn:hover {
+            background: #2980b9;
+        }
+
+        /* Chat Section */
+        #chat-section {
+            display: none;
+            margin-top: 20px;
+        }
+
+        #chat-box {
+            height: 250px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            overflow-y: auto;
+            background: var(--background);
+        }
+
+        .message {
+            margin: 10px 0;
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 80%;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .message.self {
+            background: var(--secondary);
+            color: white;
+            margin-left: auto;
+        }
+
+        .message.other {
+            background: #ecf0f1;
+            margin-right: auto;
+        }
+
+        .sender-name {
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-bottom: 5px;
+            opacity: 0.8;
+        }
+
+        #chat-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        /* File Upload */
+        .file-upload {
+            margin-top: 10px;
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .file-upload label {
+            background: var(--secondary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .file-upload label:hover {
+            background: #2980b9;
+        }
+
+        .file-message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 15px;
+            background: #ecf0f1;
+            text-align: center;
+        }
+
+        .file-message a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        .file-message a:hover {
+            text-decoration: underline;
+        }
+
+        /* Logout Button */
+        .logout-btn {
+            background: var(--accent);
+            margin-top: 20px;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Our Private Space 💖</h1>
+        
+        <!-- Login Section -->
+        <div id="login-section">
+            <div class="input-group">
+                <input type="text" id="username" class="input-field" placeholder="Username 🧑💻">
+                <span class="toggle-btn" onclick="toggleVisibility('username', this)">👁️</span>
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" class="input-field" placeholder="Password 🔑">
+                <span class="toggle-btn" onclick="toggleVisibility('password', this)">👁️</span>
+            </div>
+            <button class="login-btn" onclick="login()">Unlock Our Space 🔓</button>
+            <p id="error-message">Invalid credentials! Try again. ❌</p>
+        </div>
+
+        <!-- Main Section -->
+        <div id="main-section">
+            <h2>Hello, <span id="user-name"></span>! 🌸</h2>
+            
+            <div class="features">
+                <button class="feature-btn" onclick="showSection('chat')">💌 Private Chat</button>
+                <button class="feature-btn" onclick="showSection('notepad')">📔 Shared Notes</button>
+            </div>
+
+            <!-- Chat Section -->
+            <div id="chat-section">
+                <div id="chat-box"></div>
+                <input type="text" id="chat-input" placeholder="Type your heart out... 💬">
+                <button class="login-btn" onclick="sendMessage()" style="width: auto;">Send 🚀</button>
+
+                <!-- File Upload -->
+                <div class="file-upload">
+                    <input type="file" id="file-input" onchange="handleFileUpload()">
+                    <label for="file-input">📁 Upload File/Photo</label>
+                </div>
+            </div>
+
+            <!-- Notepad Section -->
+            <div id="notepad-section">
+                <textarea id="notepad" placeholder="Our shared thoughts... ✍️"></textarea>
+            </div>
+
+            <button class="login-btn logout-btn" onclick="logout()">Secure Logout 🔒</button>
+        </div>
+    </div>
+
+    <script>
+        let peer = null;
+        let conn = null;
+        let currentUser = "";
+
+        // Toggle password visibility
+        function toggleVisibility(fieldId, icon) {
+            const field = document.getElementById(fieldId);
+            field.type = field.type === "password" ? "text" : "password";
+            icon.textContent = field.type === "password" ? "👁️" : "🙈";
+        }
+
+        // Login function
+        function login() {
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const errorMessage = document.getElementById("error-message");
+
+            if ((username === "shakibzabed" && password === "172002@") || 
+                (username === "jannatulbushra" && password === "182001@")) {
+                currentUser = username;
+                document.getElementById("login-section").style.display = "none";
+                document.getElementById("main-section").style.display = "block";
+                document.getElementById("user-name").textContent = username;
+                errorMessage.style.display = "none";
+                initializePeer();
+            } else {
+                errorMessage.style.display = "block";
+            }
+        }
+
+        // Initialize PeerJS
+        function initializePeer() {
+            peer = new Peer({
+                host: '0.peerjs.com',
+                port: 443,
+                path: '/',
+                pingInterval: 5000
+            });
+
+            peer.on('open', (id) => {
+                console.log("Your Peer ID:", id);
+            });
+
+            peer.on('connection', (connection) => {
+                conn = connection;
+                setupConnection();
+            });
+
+            peer.on('error', (error) => {
+                console.error("PeerJS error:", error);
+            });
+        }
+
+        // Setup connection
+        function setupConnection() {
+            conn.on('open', () => {
+                conn.on('data', (data) => {
+                    if (data.type === "message") {
+                        addMessage(data.message, data.sender, false);
+                    } else if (data.type === "file") {
+                        addFileMessage(data.fileName, data.fileUrl, data.sender);
+                    }
+                });
+            });
+
+            conn.on('error', (error) => {
+                console.error("Connection error:", error);
+            });
+        }
+
+        // Send message
+        function sendMessage() {
+            const input = document.getElementById("chat-input");
+            const message = input.value.trim();
+            
+            if (message && conn && conn.open) {
+                conn.send({
+                    type: "message",
+                    message: message,
+                    sender: currentUser
+                });
+                addMessage(message, currentUser, true);
+                input.value = "";
+            }
+        }
+
+        // Handle file upload
+        function handleFileUpload() {
+            const fileInput = document.getElementById("file-input");
+            const file = fileInput.files[0];
+            if (file && conn && conn.open) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const fileUrl = event.target.result;
+                    conn.send({
+                        type: "file",
+                        fileName: file.name,
+                        fileUrl: fileUrl,
+                        sender: currentUser
+                    });
+                    addFileMessage(file.name, fileUrl, currentUser, true);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Add message to chat box
+        function addMessage(message, sender, isSelf) {
+            const chatBox = document.getElementById("chat-box");
+            const messageDiv = document.createElement("div");
+            messageDiv.className = `message ${isSelf ? "self" : "other"}`;
+            messageDiv.innerHTML = `
+                <strong>${sender}:</strong> ${message}
+                <div style="font-size: 0.8em; margin-top: 5px;">
+                    ${new Date().toLocaleTimeString()}
+                </div>
+            `;
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Add file message to chat box
+        function addFileMessage(fileName, fileUrl, sender, isSelf = false) {
+            const chatBox = document.getElementById("chat-box");
+            const fileDiv = document.createElement("div");
+            fileDiv.className = `file-message ${isSelf ? "self" : "other"}`;
+            fileDiv.innerHTML = `
+                <strong>${sender} sent a file:</strong>
+                <a href="${fileUrl}" download="${fileName}">${fileName}</a>
+                <div style="font-size: 0.8em; margin-top: 5px;">
+                    ${new Date().toLocaleTimeString()}
+                </div>
+            `;
+            chatBox.appendChild(fileDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm("Are you sure you want to logout? 🔒")) {
+                if (conn) conn.close();
+                if (peer) peer.destroy();
+                document.getElementById("main-section").style.display = "none";
+                document.getElementById("login-section").style.display = "block";
+                document.getElementById("username").value = "";
+                document.getElementById("password").value = "";
+                currentUser = "";
+            }
+        }
+    </script>
+</body>
+</html>
